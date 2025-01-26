@@ -32,7 +32,7 @@ env\Scripts\activate    # Sur Windows
 pip install -r requirements.txt
 pip install -r modules_armand.txt
 ```
-⚠️ *L'installation peut prendre environ 10 minutes, en particulier à cause du module `torch`.*
+⚠️ *L'installation peut prendre environ 10 minutes, en particulier à cause du module `torch`.(1 Giga)
 
 ### 3. Configurer FFmpeg
 
