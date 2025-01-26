@@ -369,7 +369,11 @@ def before_request():
 # Route pour télécharger des fichiers
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    user_id = session.get('user_id')
     mon_resume=main.compterendu()
+    reunion = Reunion.query.get(reunion_id)
+    reunion.compterendu = mon_resume
+    db.session.commit()
     return render_template("upload.html", dynamic_message=Markup(mon_resume))
 
 
