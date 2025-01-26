@@ -1,25 +1,99 @@
-etapes pour faire marcher le projet:
-*charger sa cle open ai dans .venv/APIKEY.txt
-*creer un nouvel environement python pour le projet
-*installer requirement.txt et modules_armand.txt (ça prend 10 min, nottement à cause du module torch qui est très lourd)
-*telecharger ffmpeg
-Pour ajouter FFmpeg à votre variable PATH, suivez ces étapes selon votre système d'exploitation :
-Windows :
+# Projet de Compte Rendu Automatique
 
-    Téléchargez FFmpeg :
-        Rendez-vous sur le site officiel de FFmpeg ou gyan.dev.
-        Téléchargez une version "Essential Builds" ou "Full Builds".
-        Décompressez l'archive dans un dossier sur votre machine, par exemple : C:\ffmpeg.
+Ce projet utilise des technologies modernes comme Flask, Whisper, et OpenAI pour générer automatiquement des comptes rendus de réunions à partir de fichiers vidéo ou texte. Voici un guide pour configurer et exécuter le projet.
 
-    Ajoutez le dossier bin à la variable PATH :
-        Appuyez sur Win + S et cherchez "Variables d'environnement".
-        Dans la fenêtre Propriétés système, cliquez sur Variables d'environnement....
-        Dans la section Variables système, trouvez et sélectionnez la variable Path, puis cliquez sur Modifier.
-        Ajoutez un nouveau chemin en cliquant sur Nouveau et entrez le chemin vers le dossier bin de FFmpeg, par exemple :
-        C:\ffmpeg\bin
+---
 
-Cliquez sur OK pour fermer toutes les fenêtres.
-*lancer sqlalchemy.py
+## Prérequis
 
-/!\ une fois dans la page http://127.0.0.1:5000/index ui permet de faire un compte rendu, le bouton valide votre choix envoie sur une page avec un message json. Ne pas s'inquieter,  Pour continuer a naviguer il suffit de revenir en arrière
+1. **Clé OpenAI** :
+   - Créez un fichier `.venv/APIKEY.txt`.
+   - Ajoutez-y votre clé API OpenAI.
+
+2. **Python** : Assurez-vous que Python (version 3.8 ou supérieure) est installé sur votre machine.
+
+3. **FFmpeg** : Téléchargez et configurez FFmpeg pour traiter les fichiers multimédias.
+
+---
+
+## Étapes d'installation
+
+### 1. Créer un environnement Python
+```bash
+python -m venv .venv
+source .venv/bin/activate # Sur Linux/Mac
+env\Scripts\activate    # Sur Windows
+```
+
+### 2. Installer les dépendances
+
+#### Installer les modules requis :
+```bash
+pip install -r requirements.txt
+pip install -r modules_armand.txt
+```
+⚠️ *L'installation peut prendre environ 10 minutes, en particulier à cause du module `torch`.*
+
+### 3. Configurer FFmpeg
+
+#### Téléchargement et installation :
+1. Rendez-vous sur [le site officiel de FFmpeg](https://ffmpeg.org/) ou [gyan.dev](https://www.gyan.dev/).
+2. Téléchargez une version "Essential Builds" ou "Full Builds".
+3. Décompressez l'archive dans un dossier, par exemple : `C:\ffmpeg`.
+
+#### Ajouter FFmpeg à la variable PATH (Windows) :
+1. Appuyez sur `Win + S` et recherchez "Variables d'environnement".
+2. Dans la fenêtre **Propriétés système**, cliquez sur **Variables d'environnement...**.
+3. Dans la section **Variables système**, sélectionnez la variable `Path` et cliquez sur **Modifier**.
+4. Ajoutez un nouveau chemin : `C:\ffmpeg\bin`.
+5. Cliquez sur **OK** pour valider.
+
+Vérifiez l'installation :
+```bash
+ffmpeg -version
+```
+
+### 4. Lancer le projet
+
+Exécutez le fichier `sqlalchemy.py` :
+```bash
+python sqlalchemy.py
+```
+
+---
+
+## Utilisation
+
+1. Une fois le projet lancé, ouvrez votre navigateur et accédez à :
+   - [http://127.0.0.1:5000/index](http://127.0.0.1:5000/index)
+
+2. Suivez les étapes pour :
+   - Charger un fichier vidéo ou texte.
+   - Obtenir un compte rendu structuré de la réunion.
+
+### Remarque importante
+- Après avoir cliqué sur le bouton pour valider, la page affichera un message JSON.
+- Pour continuer à naviguer, revenez simplement à la page précédente dans votre navigateur.
+
+---
+
+## Dépannage
+
+### Erreurs courantes :
+1. **FFmpeg non trouvé** :
+   - Assurez-vous que le chemin `C:\ffmpeg\bin` est ajouté à votre variable PATH.
+
+2. **Modules manquants** :
+   - Vérifiez que toutes les dépendances sont bien installées avec `pip install -r requirements.txt` et `modules_armand.txt`.
+
+3. **Erreur OpenAI API** :
+   - Assurez-vous que votre clé OpenAI est correctement placée dans `.venv/APIKEY.txt`.
+
+---
+
+## Contributeurs
+
+- **Armand** : Créateur principal du projet.
+
+Pour toute question ou amélioration, n'hésitez pas à proposer une issue ou une pull request.
 
