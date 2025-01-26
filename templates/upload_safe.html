@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de CR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <main class="main-container">
+      <header class="header">
+        <h1 class="header-title">Générateur de Compte Rendu</h1>
+      </header>
+      
+      <!-- Affichage du texte formaté -->
+      <section class="result-section">
+        <h2>Compte Rendu:</h2>
+        <div class="formatted-result">
+          <!-- Affichage du texte HTML formaté -->
+          {{ dynamic_message|safe }}
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

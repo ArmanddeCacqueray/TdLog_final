@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Ajouter une vidéo</title>
+</head>
+<body>
+    <div class="container">
+        <section id="redirect-section" class="redirect-section">
+            <a href="{{ url_for('index') }}">
+              <button>Voir les Transcriptions</button>
+            </a>
+            <a href="{{ url_for('logout') }}">
+                <button>Déconnection</button>
+            </a>
+        </section>
+        <h1>Ajouter une nouvelle vidéo</h1>
+        <form method="POST" action="{{ url_for('ajouter_video') }}">
+            <label for="video_url">URL de la vidéo :</label>
+            <input type="text" id="video_url" name="video_url" required>
+
+            <label for="video_length">Longueur de la vidéo (en secondes) :</label>
+            <input type="number" id="video_length" name="video_length" required>
+
+            <button type="submit">Ajouter</button>
+        </form>
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('ajouter_transcription') }}">
+            <label for="video_url">ajouter un titre :</label>
+            <input type="text" id="video_url" name="video_url" required>
+
+            <textarea name="transcription_text" rows="10" cols="50" placeholder="Entrez la transcription ici..."></textarea><br><br>
+            <button type="submit" class="btn btn-primary">Ajouter la transcription</button>
+        </form>
+        <a href="{{ url_for('home') }}">Retour à l'accueil</a>
+    </div>
+</body>
+</html>

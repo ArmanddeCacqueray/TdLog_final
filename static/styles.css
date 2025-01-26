@@ -1,0 +1,134 @@
+/* styles.css */
+
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+    color: #444;
+}
+
+/* Header */
+header {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 1rem 2rem;
+    text-align: center;
+}
+
+header a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: #0056b3;
+    padding: 0.5rem;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav a:hover {
+    background-color: #004080;
+}
+
+/* Forms */
+form {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+form input, form button {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Flash messages */
+.flash-message {
+    max-width: 500px;
+    margin: 1rem auto;
+    padding: 1rem;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.flash-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.flash-message.danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Video list */
+.video-list {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.video-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.video-item:last-child {
+    border-bottom: none;
+}
+
+.video-item a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+.video-item a:hover {
+    text-decoration: underline;
+}

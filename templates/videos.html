@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidéos</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Vidéos de {{ user.name }}</h1>
+    </header>
+    <main>
+        <h2>Liste des vidéos</h2>
+        <ul>
+            {% for video in videos %}
+                <li>
+                    <p>URL : {{ video.video_url }}</p>
+                    <p>Durée : {{ video.video_length }} secondes</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

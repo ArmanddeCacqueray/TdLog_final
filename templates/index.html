@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de CR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <section id="redirect-section" class="redirect-section">
+      <a href="{{ url_for('logout') }}">
+          <button>Déconnection</button>
+      </a>
+    <main class="main-container">
+      <header class="header">
+        <h1 class="header-title">Générateur de Compte Rendu</h1>
+      </header>
+
+      <!-- Section de sélection de vidéo et génération CR -->
+      <section class="select-section" id="select-section">
+        <h2>1. Sélectionner une Vidéo ou un Fichier Texte</h2>
+      <form action="/generate_cr" method="post" enctype="multipart/form-data">
+        <label for="video_select">Sélectionner une vidéo :</label>
+        <select name="video_select" id="video_select">
+          <option value="">-- Choisir une vidéo --</option>
+          {% for video in videos %}
+            <option value="{{ video.id }}">
+              {% if video.video_url %}
+                {{ video.video_url }}
+              {% else %}
+                Transcription uniquement
+              {% endif %}
+            </option>
+          {% endfor %}
+        </select>
+
+        <button type="submit">Validez votre choix</button>
+      </form>
+
+
+
+      <!-- Section pour Conversation avec GPT -->
+      <section class="conversation-section">
+        <h2>3. Conversation avec l'Assistant GPT</h2>
+        <form action="/conversation" method="post">
+          <button type="submit">Assistant GPT</button>
+        </form>
+      </section>
+
+      <!-- Section pour Générer un CR Animé -->
+      <section class="animation-section">
+        <h2>4. Générer un Compte Rendu Animé</h2>
+        <form action="/animation" method="post">
+          <button type="submit">Générer Anime</button>
+        </form>
+      </section>
+
+      <!-- Section pour Générer un CR dans la Base de Données -->
+      <section class="database-section">
+        <h2>5. Générer un Compte Rendu (Base de Données)</h2>
+        <form action="/basededonnee" method="post">
+          <button type="submit">Uploader Base de Données</button>
+        </form>
+      </section>
+      <h2>6. Générer un Compte Rendu Classique</h2>
+      <form action="/upload" method="post">
+        <button type="submit">Uploader Base de Données</button>
+      </form>
+    </section>
+
+      <script src="{{ url_for('static', filename='js/prompt.js') }}"></script>
+    </main>
+  </body>
+</html>
+
+<div class="flash-messages">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+</div>
+
+<script>
+  document.getElementById("video-form").addEventListener("submit", function(event) {
+    // Empêche l'exécution instantanée si nécessaire (optionnel, si redirection automatique après soumission)
+    // event.preventDefault();
+
+    // Cache la section de sélection
+    const selectSection = document.getElementById("select-section");
+    if (selectSection) {
+      selectSection.style.display = "none";
+    }
+  });
+</script>
