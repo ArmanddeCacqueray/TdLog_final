@@ -82,7 +82,7 @@ flask run
    - Assurez-vous que le chemin `C:\ffmpeg\bin` est ajouté à votre variable PATH.
 
 2. **Modules manquants** :
-   - Vérifiez que toutes les dépendances sont bien installées avec `pip install -r requirements.txt`
+   - Vérifiez que toutes les dépendances se sont bien installées dans l'environement du projet avec pip list
 
 3. **Erreur OpenAI API** :
    - Assurez-vous que votre clé OpenAI est correctement placée dans `.venv/APIKEY.txt`.
