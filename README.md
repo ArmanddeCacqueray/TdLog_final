@@ -21,3 +21,5 @@ Windows :
 Cliquez sur OK pour fermer toutes les fenêtres.
 *lancer sqlalchemy.py
 
+/!\ une fois dans la page http://127.0.0.1:5000/index ui permet de faire un compte rendu, le bouton valide votre choix envoie sur une page avec un message json. Ne pas s'inquieter,  Pour continuer a naviguer il suffit de revenir en arrière
+
