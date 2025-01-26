@@ -46,24 +46,33 @@ openai.api_key_path = ".venv/APIKEY.txt"
 message_history = []
 
 
+import fitz  # PyMuPDF
+
 def read_pdf(filename):
+    """
+    Lit le contenu textuel d'un fichier PDF et retourne le texte concaténé de toutes les pages.
+
+    :param filename: Chemin du fichier PDF à lire.
+    :return: Texte extrait du PDF.
+    """
     context = ""
 
-    # Open the PDF file
-    with fitz.open(filename) as pdf_file:
-        # Get the number of pages in the PDF file
-        num_pages = pdf_file.page_count
+    try:
+        # Ouvrir le fichier PDF
+        with fitz.Document(filename) as pdf_file:
+            # Boucler sur chaque page du PDF
+            for page_num in range(pdf_file.page_count):
+                # Obtenir la page actuelle
+                page = pdf_file.load_page(page_num)
 
-        # Loop through each page in the PDF file
-        for page_num in range(num_pages):
-            # Get the current page
-            page = pdf_file[page_num]
+                # Extraire le texte de la page
+                page_text = page.get_text().replace("\n", "")
 
-            # Get the text from the current page
-            page_text = page.get_text().replace("\n", "")
+                # Ajouter le texte extrait au contexte global
+                context += page_text
+    except Exception as e:
+        print(f"Erreur lors de la lecture du PDF : {e}")
 
-            # Append the text to context
-            context += page_text
     return context
 
 def read_txt(filename):
