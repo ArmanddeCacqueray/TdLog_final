@@ -64,14 +64,14 @@ flask run
 ## Utilisation
 
 1. Une fois le projet lancé,  vous accédez à :
-   - [http://127.0.0.1:5000/index](http://127.0.0.1:5000/)
+   - [http://127.0.0.1:5000/]
 
 2. Suivez les étapes pour :
    - Charger des fichiers vidéo ou texte.
    - Obtenir un compte rendu structuré de la réunion.
 
 ### Remarque importante
-- Après avoir cliqué sur le bouton pour valider la video selectionnée, la page affichera un message JSON.
+- Après avoir cliqué sur le bouton pour valider la video selectionnée, la page affichera un message de réussite JSON.
 - Pour continuer à naviguer, revenez simplement à la page précédente dans votre navigateur.
 
 ---
