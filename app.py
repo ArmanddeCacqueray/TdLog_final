@@ -1,10 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, Markup, g
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 import os
 import fitz  # PyMuPDF
-
+import yt_dlp   
+import main
+import subprocess
+import whisper
+from datetime import datetime
+import openai
+import re
+from dotenv import load_dotenv
 
 # Génération d'une clé secrète
 secret_key = secrets.token_hex(16)  # Génère une clé secrète hexadécimale de 32 caractères
@@ -15,12 +22,10 @@ app = Flask(__name__)
 app.secret_key = secret_key
 
 # Configuration de la base de données
-import os
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my_new_database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-import yt_dlp   
+
 
 def download_video_from_url(url):
     ydl_opts = {
@@ -49,15 +54,17 @@ class User(db.Model):
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     video_url = db.Column(db.String(255), nullable=False)
-    video_length = db.Column(db.Integer, nullable=False)  # Longueur de la vidéo en secondes
+    video_length = db.Column(db.Integer, nullable=True)  # Longueur de la vidéo en secondes
     transcription = db.Column(db.Text, nullable=True) 
+    compterendu = db.Column(db.Text, nullable=True) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
-    def __init__(self, video_url, video_length, user_id, transcription=None):
+    def __init__(self, video_url, video_length=None, user_id, transcription=None, comptrendu=None):
             self.video_url = video_url
             self.video_length = video_length
             self.user_id = user_id
             self.transcription = transcription
+            self.compterendu = compterendu
 
 
 # Créer les tables dans la base de données
@@ -79,11 +86,6 @@ def logout():
     flash('Vous êtes déconnecté.', 'info')
     return redirect(url_for('login'))
 
-import yt_dlp
-import os
-from flask import flash, redirect, url_for, render_template, request, session
-import main
-
 @app.route('/ajouter_transcription', methods=['POST'])
 def ajouter_transcription():
     user_id = session.get('user_id')
@@ -103,7 +105,6 @@ def ajouter_transcription():
             # Créer un nouvel enregistrement avec juste du texte (transcription)
             new_video = Video(
                 video_url=video_name,  # Laisser vide car ce n'est pas une vidéo
-                video_length=len(transcription_text.split()),  # Longueur basée sur le nombre de mots
                 user_id=user_id,
                 transcription=transcription_text
             )
@@ -311,12 +312,7 @@ def index():
     # Récupérer toutes les transcriptions de l'utilisateur
     videos = Video.query.filter_by(user_id=user.id).all() # Supposez que "Video" est votre modèle SQLAlchemy
     return render_template('index.html', videos=videos)
-import os
 
-import os
-import subprocess
-import whisper
-from flask import request
 
 @app.route('/update_transcription', methods=['POST'])
 def update_transcription():
@@ -337,14 +333,6 @@ def update_transcription():
         return f"Fichier transcription.txt mis à jour avec succès pour la vidéo ID {video_id}.", 200
     except Exception as e:
         return f"Erreur lors de la mise à jour : {e}", 500
-
-from flask import Flask, request, render_template, jsonify, Markup, g
-import os
-from datetime import datetime
-import openai
-import main
-import re
-from dotenv import load_dotenv
 
 # Chargement des variables d'environnement
 load_dotenv()
@@ -415,8 +403,6 @@ def prompt():
         ans = gpt3_completion(prompt)
         return jsonify({"answer": ans})
 
-import os
-from flask import request, redirect, url_for, flash
 
 @app.route('/generate_cr', methods=['POST'])
 def generate_cr():
@@ -565,7 +551,6 @@ def compterendu_basededonnee():
 
     return summary
 
-import re
 
 def format_text_for_html(text):
     # Conversion de Markdown **gras** en balises <strong>
