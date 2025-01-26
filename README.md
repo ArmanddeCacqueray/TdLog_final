@@ -10,7 +10,7 @@ Ce projet utilise des technologies modernes comme Flask, Whisper, et OpenAI pour
    - Créez un fichier `.venv/APIKEY.txt`.
    - Ajoutez-y votre clé API OpenAI.
 
-2. **Python** : Assurez-vous que Python (version 3.8 ou supérieure) est installé sur votre machine.
+2. **Python** : Assurez-vous que Python (l'appli a été testée avec python 3.9) est installé sur votre machine.
 
 3. **FFmpeg** : Téléchargez et configurez FFmpeg pour traiter les fichiers multimédias.
 
