@@ -30,7 +30,6 @@ env\Scripts\activate    # Sur Windows
 #### Installer les modules requis :
 ```bash
 pip install -r requirements.txt
-pip install -r modules_armand.txt
 ```
 ⚠️ *L'installation peut prendre environ 10 minutes, en particulier à cause du module `torch`.(1 Giga)
 
@@ -67,11 +66,11 @@ flask run
    - [http://127.0.0.1:5000/]
 
 2. Suivez les étapes pour :
-   - Charger des fichiers vidéo ou texte.
+   - Charger des fichiers vidéo ou texte (charger une video peut prendre quelques minutes)
    - Obtenir un compte rendu structuré de la réunion.
 
-### Remarque importante
-- Après avoir cliqué sur le bouton pour valider la video selectionnée, la page affichera un message de réussite JSON.
+### Remarque 
+- Dans http://127.0.0.1:5000/index, après avoir cliqué sur le bouton pour valider la réunion selectionnée, la page affichera un message de réussite JSON.
 - Pour continuer à naviguer, revenez simplement à la page précédente dans votre navigateur.
 
 ---
@@ -83,7 +82,7 @@ flask run
    - Assurez-vous que le chemin `C:\ffmpeg\bin` est ajouté à votre variable PATH.
 
 2. **Modules manquants** :
-   - Vérifiez que toutes les dépendances sont bien installées avec `pip install -r requirements.txt` et `modules_armand.txt`.
+   - Vérifiez que toutes les dépendances sont bien installées avec `pip install -r requirements.txt`
 
 3. **Erreur OpenAI API** :
    - Assurez-vous que votre clé OpenAI est correctement placée dans `.venv/APIKEY.txt`.
