@@ -54,9 +54,9 @@ ffmpeg -version
 ```
 
 ### 4. Lancer le projet
-Cliquer sur le bouton run dans sqlalchemy.py ou exécutez le fichier  :
+le projet se lance avec la commande flask dans le powershell:
 ```bash
-python sqlalchemy.py
+flask run
 ```
 
 ---
