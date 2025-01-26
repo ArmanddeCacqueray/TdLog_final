@@ -8,9 +8,6 @@ import os
 import subprocess
 import whisper
 
-# Initialisation de l'application Flask
-from app import app
-
 # Chargement de la clé OpenAI
 openai.api_key_path = ".venv/APIKEY.txt"
 
