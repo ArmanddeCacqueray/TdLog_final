@@ -87,11 +87,3 @@ flask run
 3. **Erreur OpenAI API** :
    - Assurez-vous que votre clé OpenAI est correctement placée dans `.venv/APIKEY.txt`.
 
----
-
-## Contributeurs
-
-- **Armand** : Créateur principal du projet.
-
-Pour toute question ou amélioration, n'hésitez pas à proposer une issue ou une pull request.
-
