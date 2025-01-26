@@ -1,7 +1,7 @@
 etapes pour faire marcher le projet:
 *charger sa cle open ai dans .venv/APIKEY.txt
 *creer un nouvel environement python pour le projet
-*installer requirement.txt et modules_armand.txt (ça prend 10 min)...
+*installer requirement.txt et modules_armand.txt (ça prend 10 min, nottement à cause du module torch qui est très lourd)
 *telecharger ffmpeg
 Pour ajouter FFmpeg à votre variable PATH, suivez ces étapes selon votre système d'exploitation :
 Windows :
