@@ -18,7 +18,7 @@
 
       <!-- Section de sélection de vidéo et génération CR -->
       <section class="select-section" id="select-section">
-        <h2>1. Sélectionner une Vidéo ou un Fichier Texte</h2>
+        <h2>Sélectionner une Reunion poru générer le compte rendu</h2>
       <form action="/generate_cr" method="post" enctype="multipart/form-data">
         <label for="video_select">Sélectionner une vidéo :</label>
         <select name="video_select" id="video_select">
@@ -41,7 +41,7 @@
 
       <!-- Section pour Conversation avec GPT -->
       <section class="conversation-section">
-        <h2>3. Conversation avec l'Assistant GPT</h2>
+        <h2>Version 1. Conversation avec l'Assistant GPT</h2>
         <form action="/conversation" method="post">
           <button type="submit">Assistant GPT</button>
         </form>
@@ -49,22 +49,22 @@
 
       <!-- Section pour Générer un CR Animé -->
       <section class="animation-section">
-        <h2>4. Générer un Compte Rendu Animé</h2>
+        <h2>Version 2. Générer un Compte Rendu Animé</h2>
         <form action="/animation" method="post">
-          <button type="submit">Générer Anime</button>
+          <button type="submit">Générer</button>
         </form>
       </section>
 
       <!-- Section pour Générer un CR dans la Base de Données -->
       <section class="database-section">
-        <h2>5. Générer un Compte Rendu (Base de Données)</h2>
+        <h2>Version 3. Générer un Compte Rendu (Base de Données)</h2>
         <form action="/basededonnee" method="post">
-          <button type="submit">Uploader Base de Données</button>
+          <button type="submit">Générer</button>
         </form>
       </section>
-      <h2>6. Générer un Compte Rendu Classique</h2>
+      <h2>Version 4. Générer un Compte Rendu Classique</h2>
       <form action="/upload" method="post">
-        <button type="submit">Uploader Base de Données</button>
+        <button type="submit">Générer</button>
       </form>
     </section>
 
