@@ -12,7 +12,7 @@ Ce projet utilise des technologies modernes comme Flask, Whisper, et OpenAI pour
 
 2. **Python** : Assurez-vous que Python (l'appli a été testée avec python 3.9) est installé sur votre machine.
 
-3. **FFmpeg** : Téléchargez et configurez FFmpeg pour traiter les fichiers multimédias.
+3. **FFmpeg** : Téléchargez et configurez FFmpeg pour traiter les fichiers multimédias**.
 
 ---
 
@@ -33,7 +33,7 @@ pip install -r requirements.txt
 ```
 ⚠️ *L'installation peut prendre environ 10 minutes, en particulier à cause du module `torch`.(1 Giga)
 
-### 3. Configurer FFmpeg
+### **3. Configurer FFmpeg
 
 #### Téléchargement et installation :
 1. Rendez-vous sur [le site officiel de FFmpeg](https://ffmpeg.org/) ou [gyan.dev](https://www.gyan.dev/).
