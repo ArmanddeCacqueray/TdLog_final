@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 import os
+import fitz  # PyMuPDF
 
 
 # Génération d'une clé secrète
@@ -402,6 +403,7 @@ def gpt3_completion(prompt_user, model="gpt-3.5-turbo", max_tokens=450):
 # Route pour afficher la page de conversation
 @app.route("/conversation", methods=["GET", "POST"])
 def conversation():
+    message_history.clear()  # Réinitialise la liste à vide
     message_history.append({"role": "user", "content": chunks[0]})
     return render_template("index_conversation.html")
 
@@ -481,6 +483,7 @@ def compterendu_anime():
     transcription_chunks = main.split_text(transcription_text)
 
     # Ajouter les morceaux dans l'historique des messages
+    message_history.clear()
     message_history.append({"role": "user", "content": model_chunks[0]})
     message_history.append({"role": "user", "content": transcription_chunks[0]})
     message_history.append({"role": "user", "content": "Génère un scénario animé en format Javascript, où chaque bot (bot1, bot2, etc.) représente un intervenant en respectant le modele que je t'ai donné"})
@@ -542,6 +545,7 @@ def compterendu_basededonnee():
     transcription_chunks = main.split_text(transcription_text)
 
     # Ajouter les morceaux dans l'historique des messages
+    message_history.clear()
     message_history.append({"role": "user", "content": model_chunks[0]})
     message_history.append({"role": "user", "content": transcription_chunks[0]})
     message_history.append({"role": "user", "content": "Génère un texte formaté en base de données à partir de la transcription de réunion, avec des titres en gras et des sauts de ligne."})
