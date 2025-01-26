@@ -54,8 +54,7 @@ ffmpeg -version
 ```
 
 ### 4. Lancer le projet
-
-Exécutez le fichier `sqlalchemy.py` :
+Cliquer sur le bouton run dans sqlalchemy.py ou exécutez le fichier  :
 ```bash
 python sqlalchemy.py
 ```
@@ -64,15 +63,15 @@ python sqlalchemy.py
 
 ## Utilisation
 
-1. Une fois le projet lancé, ouvrez votre navigateur et accédez à :
-   - [http://127.0.0.1:5000/index](http://127.0.0.1:5000/index)
+1. Une fois le projet lancé,  vous accédez à :
+   - [http://127.0.0.1:5000/index](http://127.0.0.1:5000/)
 
 2. Suivez les étapes pour :
-   - Charger un fichier vidéo ou texte.
+   - Charger des fichiers vidéo ou texte.
    - Obtenir un compte rendu structuré de la réunion.
 
 ### Remarque importante
-- Après avoir cliqué sur le bouton pour valider, la page affichera un message JSON.
+- Après avoir cliqué sur le bouton pour valider la video selectionnée, la page affichera un message JSON.
 - Pour continuer à naviguer, revenez simplement à la page précédente dans votre navigateur.
 
 ---
