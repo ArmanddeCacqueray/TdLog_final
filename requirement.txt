@@ -19,7 +19,6 @@ distro==1.9.0
 etelemetry==0.3.1
 exceptiongroup==1.2.2
 filelock==3.17.0
-fitz==0.0.1.dev2
 Flask==2.3.2
 Flask-Login==0.6.3
 Flask-SQLAlchemy==3.1.1
