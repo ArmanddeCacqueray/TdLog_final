@@ -383,7 +383,7 @@ document = utils.read_txt(filename)
 chunks = utils.split_text(document)  
 message_history = []
 def gpt3_completion(prompt_user, model="gpt-3.5-turbo", max_tokens=450):
-    global message_history
+    global message_history    
     message_history.append({"role": "user", "content": prompt_user})
     response = openai.ChatCompletion.create(
         model=model, messages=message_history, max_tokens=max_tokens
@@ -396,7 +396,10 @@ def gpt3_completion(prompt_user, model="gpt-3.5-turbo", max_tokens=450):
 @app.route("/conversation", methods=["GET", "POST"])
 def conversation():
     message_history.clear()  # Réinitialise la liste à vide
-    message_history.append({"role": "user", "content": chunks[0]})
+    transcription_path = os.path.join(os.path.dirname(__file__), "transcription.txt")
+    transcription_text = utils.read_txt(transcription_path)
+    transcription_chunks = utils.split_text(transcription_text)    
+    message_history.append({"role": "user", "content": transcription_chunks[0]})
     return render_template("index_conversation.html")
 
 # Route pour envoyer un prompt et recevoir une réponse
@@ -441,7 +444,7 @@ def generate_cr():
     except Exception as e:
         flash(f"Une erreur s'est produite lors de la génération du compte rendu : {str(e)}")
         return redirect(url_for('index'))
-     return jsonify({'message': 'transcription chargée dans transcription.txt, vous pouvez maintenant generer un compte rendu'}), 200
+    return jsonify({'message': 'transcription chargée dans transcription.txt, vous pouvez maintenant generer un compte rendu'}), 200
 
 
 # Route pour poser une question prédéfinie
