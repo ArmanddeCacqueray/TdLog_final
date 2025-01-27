@@ -441,7 +441,7 @@ def generate_cr():
     except Exception as e:
         flash(f"Une erreur s'est produite lors de la génération du compte rendu : {str(e)}")
         return redirect(url_for('index'))
-    return jsonify({"video uploadée, veuillez retourner sur le site"})
+     return jsonify({'message': 'transcription chargée dans transcription.txt, vous pouvez maintenant generer un compte rendu'}), 200
 
 
 # Route pour poser une question prédéfinie
