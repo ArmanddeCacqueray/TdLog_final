@@ -4,16 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <title>Ajouter une vidéo, via un lien url ou en entrant directement la transcription (plus rapide)</title>
+    <title>Ajouter une video</title>
 </head>
 <body>
     <div class="container">
         <section id="redirect-section" class="redirect-section">
             <a href="{{ url_for('index') }}">
-              <button>Voir les Transcriptions</button>
+              <button>Générer les comptes rendus</button>
             </a>
             <a href="{{ url_for('logout') }}">
                 <button>Déconnection</button>
+            </a>
+            <a href="{{ url_for('videos') }}">
+                <button>Voir les vidéos</button>
             </a>
         </section>
         <h1>Ajouter une nouvelle vidéo</h1>

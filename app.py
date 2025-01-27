@@ -5,7 +5,7 @@ import secrets
 import os
 import fitz  # PyMuPDF
 import yt_dlp   
-import main
+import utils
 import subprocess
 import whisper
 from datetime import datetime
@@ -16,13 +16,14 @@ from dotenv import load_dotenv
 # Génération d'une clé secrète
 secret_key = secrets.token_hex(16)  # Génère une clé secrète hexadécimale de 32 caractères
 print(secret_key)
+print( "print")
 
 # Création de l'application Flask
 app = Flask(__name__)
 app.secret_key = secret_key
 
 # Configuration de la base de données
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my_new_database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ddatabase.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -54,17 +55,10 @@ class User(db.Model):
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     video_url = db.Column(db.String(255), nullable=False)
-    video_length = db.Column(db.Integer, nullable=True)  # Longueur de la vidéo en secondes
+    video_length = db.Column(db.Integer, nullable=False)  # Longueur de la vidéo en secondes
     transcription = db.Column(db.Text, nullable=True) 
     compterendu = db.Column(db.Text, nullable=True) 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    def __init__(self, video_url, video_length=None, user_id, transcription=None, comptrendu=None):
-            self.video_url = video_url
-            self.video_length = video_length
-            self.user_id = user_id
-            self.transcription = transcription
-            self.compterendu = compterendu
 
 
 # Créer les tables dans la base de données
@@ -104,7 +98,9 @@ def ajouter_transcription():
         try:
             # Créer un nouvel enregistrement avec juste du texte (transcription)
             new_video = Video(
-                video_url=video_name,  # Laisser vide car ce n'est pas une vidéo
+                video_url=video_name, 
+                video_length=0,
+                compterendu=None,
                 user_id=user_id,
                 transcription=transcription_text
             )
@@ -133,6 +129,7 @@ def ajouter_video():
     if request.method == 'POST':
         # Récupérer l'URL ou le fichier de la vidéo
         video_url = request.form.get('video_url')
+        videolength = request.form.get('video_length')
         if video_url:
             try:
                 print(f"Téléchargement de la vidéo depuis l'URL : {video_url}")
@@ -161,7 +158,7 @@ def ajouter_video():
         try:
             # Transcrire la vidéo avec Whisper
             print(f"Chargement du modèle Whisper...")
-            transcription =  main.transcribe_video(video_path, save=False)
+            transcription =  utils.transcribe_video(video_path, save=False)
 
             # Vérifier la transcription
             print(f"Transcription de la vidéo : {transcription[:100]}...")  # Afficher les 100 premiers caractères de la transcription
@@ -169,9 +166,10 @@ def ajouter_video():
             # Créer un nouvel enregistrement de vidéo avec la transcription
             new_video = Video(
                 video_url=video_path,
-                video_length=len(transcription.split()),  # Longueur basée sur le nombre de mots
+                video_length=videolength,  # Longueur basée sur le nombre de mots
                 user_id=user_id,
-                transcription=transcription
+                transcription=transcription,
+                compterendu=None
             )
             print(f"Ajout de la vidéo à la base de données : {new_video.video_url}, longueur : {new_video.video_length} mots")
             db.session.add(new_video)
@@ -268,15 +266,16 @@ def add_video():
     return redirect(url_for('home'))
 
 # Route pour afficher les vidéos d'un utilisateur
-@app.route('/videos/<email>')
-def get_videos(email):
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('Utilisateur non trouvé.', 'danger')
-        return redirect(url_for('home'))
+@app.route('/videos')
+def videos():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Rediriger vers la page de login si l'utilisateur n'est pas connecté
 
-    videos = Video.query.filter_by(user_id=user.id).all()
-    return render_template('videos.html', videos=videos, user=user)
+    # Récupérer l'utilisateur actuellement connecté
+    user = User.query.get(session['user_id'])
+    # Récupérer toutes les transcriptions de l'utilisateur
+    videos = Video.query.filter_by(user_id=user.id).all() # Supposez que "Video" est votre modèle SQLAlchemy
+    return render_template('videos.html', videos=videos)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -312,6 +311,7 @@ def index():
     # Récupérer toutes les transcriptions de l'utilisateur
     videos = Video.query.filter_by(user_id=user.id).all() # Supposez que "Video" est votre modèle SQLAlchemy
     return render_template('index.html', videos=videos)
+
 
 
 @app.route('/update_transcription', methods=['POST'])
@@ -370,17 +370,17 @@ def before_request():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     user_id = session.get('user_id')
-    mon_resume=main.compterendu()
-    reunion = Reunion.query.get(reunion_id)
-    reunion.compterendu = mon_resume
+    mon_resume=utils.compterendu()
+    video = Video.query.get(user_id)
+    video.compterendu = mon_resume
     db.session.commit()
     return render_template("upload.html", dynamic_message=Markup(mon_resume))
 
 
 # Fonction pour effectuer la complétion GPT-3.5
 filename = os.path.join(os.path.dirname(__file__), "transcription.txt")
-document = main.read_txt(filename)
-chunks = main.split_text(document)  
+document = utils.read_txt(filename)
+chunks = utils.split_text(document)  
 message_history = []
 def gpt3_completion(prompt_user, model="gpt-3.5-turbo", max_tokens=450):
     global message_history
@@ -441,8 +441,8 @@ def generate_cr():
     except Exception as e:
         flash(f"Une erreur s'est produite lors de la génération du compte rendu : {str(e)}")
         return redirect(url_for('index'))
+    return jsonify({"video uploadée, veuillez retourner sur le site"})
 
-    return jsonify({'message': 'transcription chargée dans transcription.txt, vous pouvez maintenant generer un compte rendu'}), 200
 
 # Route pour poser une question prédéfinie
 @app.route("/question", methods=["GET"])
@@ -465,12 +465,12 @@ def compterendu_anime():
     transcription_path = os.path.join(os.path.dirname(__file__), "transcription.txt")
     
     # Lecture des fichiers
-    model_text = main.read_txt(model_path)
-    transcription_text = main.read_txt(transcription_path)
+    model_text = utils.read_txt(model_path)
+    transcription_text = utils.read_txt(transcription_path)
     
     # Découper le texte en morceaux
-    model_chunks = main.split_text(model_text)
-    transcription_chunks = main.split_text(transcription_text)
+    model_chunks = utils.split_text(model_text)
+    transcription_chunks = utils.split_text(transcription_text)
 
     # Ajouter les morceaux dans l'historique des messages
     message_history.clear()
@@ -527,12 +527,12 @@ def compterendu_basededonnee():
     transcription_path = os.path.join(os.path.dirname(__file__), "transcription.txt")
     
     # Lecture des fichiers
-    model_text = main.read_txt(model_path)
-    transcription_text = main.read_txt(transcription_path)
+    model_text = utils.read_txt(model_path)
+    transcription_text = utils.read_txt(transcription_path)
 
     # Découper le texte en morceaux
-    model_chunks = main.split_text(model_text)
-    transcription_chunks = main.split_text(transcription_text)
+    model_chunks = utils.split_text(model_text)
+    transcription_chunks = utils.split_text(transcription_text)
 
     # Ajouter les morceaux dans l'historique des messages
     message_history.clear()
@@ -578,8 +578,24 @@ def basededonnee():
         result=compterendu_basededonnee()
         return render_template("upload_safe.html", dynamic_message=format_text_for_html(Markup(result)))
 
-# Exécution de l'application Flask
+@app.route('/videos/<int:video_id>/transcription')
+def view_transcription(video_id):
+    video = Video.query.get(video_id)
+    if not video or not video.transcription:
+        flash("Transcription introuvable ou vidéo inexistante.", "danger")
+        return redirect(url_for('videos', email=session.get('user_email')))  # Redirection à la liste des vidéos
+    
+    return render_template('transcription.html', transcription=video.transcription, video=video)
 
+@app.route('/videos/<int:video_id>/compterendu')
+def view_compterendu(video_id):
+    video = Video.query.get(video_id)
+    if not video or not video.compterendu:
+        flash("Compte rendu introuvable ou vidéo inexistante.", "danger")
+        return redirect(url_for('videos', email=session.get('user_email')))  # Redirection à la liste des vidéos
+    
+    return render_template('compterendu.html', compterendu=video.compterendu, video=video)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
+
