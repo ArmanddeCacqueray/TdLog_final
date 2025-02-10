@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 # Génération d'une clé secrète
 secret_key = secrets.token_hex(16)  # Génère une clé secrète hexadécimale de 32 caractères
 print(secret_key)
+print( "print")
 
 # Création de l'application Flask
 app = Flask(__name__)
@@ -265,15 +266,16 @@ def add_video():
     return redirect(url_for('home'))
 
 # Route pour afficher les vidéos d'un utilisateur
-@app.route('/videos/<email>')
-def get_videos(email):
-    user = User.query.filter_by(email=email).first()
-    if not user:
-        flash('Utilisateur non trouvé.', 'danger')
-        return redirect(url_for('home'))
+@app.route('/videos')
+def videos():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Rediriger vers la page de login si l'utilisateur n'est pas connecté
 
-    videos = Video.query.filter_by(user_id=user.id).all()
-    return render_template('videos.html', videos=videos, user=user)
+    # Récupérer l'utilisateur actuellement connecté
+    user = User.query.get(session['user_id'])
+    # Récupérer toutes les transcriptions de l'utilisateur
+    videos = Video.query.filter_by(user_id=user.id).all() # Supposez que "Video" est votre modèle SQLAlchemy
+    return render_template('videos.html', videos=videos)
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -309,6 +311,7 @@ def index():
     # Récupérer toutes les transcriptions de l'utilisateur
     videos = Video.query.filter_by(user_id=user.id).all() # Supposez que "Video" est votre modèle SQLAlchemy
     return render_template('index.html', videos=videos)
+
 
 
 @app.route('/update_transcription', methods=['POST'])
@@ -367,8 +370,8 @@ def before_request():
 @app.route('/upload', methods=['POST'])
 def upload_file():
     user_id = session.get('user_id')
-    mon_resume=utils.compterendu()
-    video = Video.query.get(user_id)
+    mon_resume=compterendu_basededonnee()
+    video = Video.query.get(video_id)
     video.compterendu = mon_resume
     db.session.commit()
     return render_template("upload.html", dynamic_message=Markup(mon_resume))
@@ -380,7 +383,7 @@ document = utils.read_txt(filename)
 chunks = utils.split_text(document)  
 message_history = []
 def gpt3_completion(prompt_user, model="gpt-3.5-turbo", max_tokens=450):
-    global message_history
+    global message_history    
     message_history.append({"role": "user", "content": prompt_user})
     response = openai.ChatCompletion.create(
         model=model, messages=message_history, max_tokens=max_tokens
@@ -393,7 +396,10 @@ def gpt3_completion(prompt_user, model="gpt-3.5-turbo", max_tokens=450):
 @app.route("/conversation", methods=["GET", "POST"])
 def conversation():
     message_history.clear()  # Réinitialise la liste à vide
-    message_history.append({"role": "user", "content": chunks[0]})
+    transcription_path = os.path.join(os.path.dirname(__file__), "transcription.txt")
+    transcription_text = utils.read_txt(transcription_path)
+    transcription_chunks = utils.split_text(transcription_text)    
+    message_history.append({"role": "user", "content": transcription_chunks[0]})
     return render_template("index_conversation.html")
 
 # Route pour envoyer un prompt et recevoir une réponse
@@ -438,8 +444,8 @@ def generate_cr():
     except Exception as e:
         flash(f"Une erreur s'est produite lors de la génération du compte rendu : {str(e)}")
         return redirect(url_for('index'))
-
     return jsonify({'message': 'transcription chargée dans transcription.txt, vous pouvez maintenant generer un compte rendu'}), 200
+
 
 # Route pour poser une question prédéfinie
 @app.route("/question", methods=["GET"])
@@ -483,7 +489,7 @@ def compterendu_anime():
 
     # Sauvegarder le scénario dans un fichier JS
     js_folder = os.path.join(os.getcwd(), "static", "js")
-    output_js_path = os.path.join(js_folder, "prompt_anime.js")
+    output_js_path = os.path.join(js_folder, "meetingSimulation.js")
     with open(output_js_path, "w", encoding="utf-8") as js_file:
         js_file.write(scenario)
         js_file.write('''
@@ -575,6 +581,23 @@ def basededonnee():
         result=compterendu_basededonnee()
         return render_template("upload_safe.html", dynamic_message=format_text_for_html(Markup(result)))
 
+@app.route('/videos/<int:video_id>/transcription')
+def view_transcription(video_id):
+    video = Video.query.get(video_id)
+    if not video or not video.transcription:
+        flash("Transcription introuvable ou vidéo inexistante.", "danger")
+        return redirect(url_for('videos', email=session.get('user_email')))  # Redirection à la liste des vidéos
+    
+    return render_template('transcription.html', transcription=video.transcription, video=video)
+
+@app.route('/videos/<int:video_id>/compterendu')
+def view_compterendu(video_id):
+    video = Video.query.get(video_id)
+    if not video or not video.compterendu:
+        flash("Compte rendu introuvable ou vidéo inexistante.", "danger")
+        return redirect(url_for('videos', email=session.get('user_email')))  # Redirection à la liste des vidéos
+    
+    return render_template('compterendu.html', compterendu=video.compterendu, video=video)
 
 if __name__ == "__main__":
     app.run(debug=True)
